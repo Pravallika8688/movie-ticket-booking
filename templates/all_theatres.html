@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Theatres in {{ city }} - BookMyShow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+    font-family:Arial; 
+    background:#f2f2f2; 
+    margin:0;
+}
+.header{
+    background:#333545;
+     color:white;
+      padding:15px; 
+      display:flex; 
+      justify-content:space-between; 
+      align-items:center;
+    }
+.header a{
+    color:white; 
+    text-decoration:none; 
+    border:1px solid white; 
+    padding:5px 10px;
+    border-radius:5px; 
+    font-size:12px;
+}
+.container{
+    max-width:800px; 
+    margin:20px auto;
+     padding:0 15px;
+    }
+h2{
+    margin:0 0 15px 0; 
+    color:#333;
+}
+.theatre-card{
+    background:white;
+    padding:18px; 
+    margin-bottom:12px;
+     border-radius:8px; 
+     display:flex; 
+     justify-content:space-between;
+     align-items:center; 
+     box-shadow:0 1px 5px rgba(0,0,0,0.08);
+    }
+.left b{
+    font-size:16px; 
+    color:#333;
+}
+.left p{
+    margin:4px 0 0 0; 
+    color:#777; 
+    font-size:13px;
+}
+.right a{
+    background:#ff2c6e; 
+    color:white; 
+    padding:8px 16px; 
+    border-radius:5px; 
+    text-decoration:none; 
+    font-weight:bold; 
+    font-size:14px;
+}
+.right a:hover{
+    background:#e0235a;
+}
+.top-bar{
+    background:white; 
+    padding:10px 15px; 
+    margin-bottom:15px; 
+    border-radius:8px; 
+    display:flex; 
+    gap:8px; 
+    flex-wrap:wrap;}
+.top-bar a{
+    padding:6px 12px;
+    border:1px solid #ddd; 
+    border-radius:15px; 
+    text-decoration:none; 
+    color:#333; 
+    font-size:13px;}
+.top-bar a.active{
+    background:#333545; 
+    color:white; 
+    border-color:#333545;
+    }
+</style>
+</head>
+<body>
+<div class="header">
+<div>📍 {{ city }} | 🎬 Theatres</div>
+<a href="/select-city">Change City</a>
+</div>
+
+<div class="container">
+
+<div class="top-bar">
+{% for c in cities %}
+<a href="/set-city/{{ c }}" class="{% if c==city %}active{% endif %}">{{ c }}</a>
+{% endfor %}
+</div>
+
+<h2>{{ theatres|length }} Theatres in {{ city }}</h2>
+
+{% for th in theatres %}
+<div class="theatre-card">
+<div class="left">
+<b>🎥 {{ th }}</b>
+<p>4K Dolby Atmos | M-Ticket Available | Food Court</p>
+</div>
+<div class="right">
+<a href="/theatre/{{ th }}">View Shows</a>
+</div>
+</div>
+{% endfor %}
+
+</div>
+</body>
+</html>

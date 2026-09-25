@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  font-family:Arial;
+  background:#f2f2f2;
+  margin:0;
+  padding-bottom:80px
+}
+.top{
+  background:#1f2533;
+  color:white;
+  padding:12px 20px
+}
+.box{
+  max-width:700px;
+  background:white;
+  margin:20px auto;
+  padding:20px;
+  border-radius:8px
+}
+.seat{
+  display:inline-block;
+  border:1px solid #ccc;
+  padding:8px 12px;
+  margin:5px;
+  border-radius:4px;
+  cursor:pointer;
+  min-width:35px;
+  text-align:center
+}
+.seat.selected{
+  background:#4caf50;
+  color:white;
+  border-color:#4caf50
+}
+.seat input{
+  display:none
+}
+/* Bottom Bar - Price left, Pay right */
+.bottom-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 20px;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.15)
+}
+.price-box{
+  font-size:18px
+}
+.price-box b{
+  font-size:22px
+}
+#payBtn{
+  background:#f84464;
+  color:white;
+  border:none;
+  padding:12px 30px;
+  border-radius:6px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer
+}
+#payBtn:disabled{
+  background:#aaa
+  }
+</style>
+<script>
+function updatePrice(){
+  let checked = document.querySelectorAll('input[name="seats"]:checked');
+  let count = checked.length;
+  let pricePer = 150;
+  let total = count * pricePer;
+  
+  document.getElementById('priceText').innerText = "Rs. " + total;
+  document.getElementById('seatCount').innerText = count + " Seats";
+  
+  let btn = document.getElementById('payBtn');
+  btn.disabled = (count==0);
+  if(count>0) btn.innerText = "PAY NOW";
+  else btn.innerText = "SELECT SEATS";
+
+  document.querySelectorAll('.seat').forEach(l=>{
+    if(l.querySelector('input').checked) l.classList.add('selected');
+    else l.classList.remove('selected');
+  });
+}
+</script>
+</head>
+<body>
+<div class="top">{{ movie.title }} - {{ theatre }} | {{ date }} | {{ show }} <a href="/theatres" style="color:#fff;float:right">Back</a></div>
+
+<div class="box">
+<h3>Select Seats</h3>
+<form id="seatForm" action="/success" method="POST">
+<input type="hidden" name="theatre" value="{{ theatre }}">
+<input type="hidden" name="movie_title" value="{{ movie.title }}">
+<input type="hidden" name="date_only" value="{{ date }}">
+<input type="hidden" name="show_time" value="{{ show }}">
+
+{% for s in seats %}
+<label class="seat"><input type="checkbox" name="seats" value="{{ s }}" onchange="updatePrice()"> {{ s }}</label>
+{% endfor %}
+
+</form>
+</div>
+
+<div class="bottom-bar">
+  <div class="price-box">
+    <div><b id="priceText">Rs. 0</b></div>
+    <div style="font-size:13px;color:#666" id="seatCount">0 Seats</div>
+  </div>
+  <button id="payBtn" form="seatForm" type="submit" disabled>SELECT SEATS</button>
+</div>
+
+</body>
+</html>

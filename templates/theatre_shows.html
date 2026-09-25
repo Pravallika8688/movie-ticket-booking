@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{
+  font-family:Arial;
+  background:#f5f5f5;
+  margin:0
+}
+.header{
+  background:#333;
+  color:white;
+  padding:15px;
+  text-align:center
+}
+.movie-card{
+  background:white;
+  margin:15px;
+  padding:15px;
+  border-radius:8px;
+  display:flex;
+  gap:15px
+}
+.movie-card img{
+  width:90px;
+  height:120px;
+  border-radius:5px
+}
+.date-pill{
+  padding:6px 12px;
+  border:1px solid #ccc;
+  border-radius:20px;
+  margin:4px;
+  cursor:pointer;
+  display:inline-block;
+  font-size:13px
+}
+.date-pill.active{
+  background:#f84464;
+  color:white;
+  border-color:#f84464
+}
+.time-btn{
+  border:1px solid #4caf50;
+  color:#4caf50;
+  padding:6px 14px;
+  margin:5px;
+  border-radius:5px;
+  text-decoration:none;
+  display:inline-block
+}
+.time-btn:hover{
+  background:#4caf50;
+  color:white
+  }
+</style>
+<script>
+let selectedDate = "";
+function selectDate(el, date){
+  document.querySelectorAll('.date-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  selectedDate = date;
+  
+  document.querySelectorAll('.time-btn').forEach(btn=>{
+    let url = new URL(btn.href);
+    url.searchParams.set('date', selectedDate);
+    btn.href = url.toString();
+  });
+}
+window.onload = ()=>{
+  let first = document.querySelector('.date-pill');
+  if(first) selectDate(first, first.dataset.date);
+}
+</script>
+</head>
+<body>
+<div class="header">{{theatre}} - {{city}} | <a href="/theatres" style="color:white;">Back</a></div>
+
+{% for m in movies %}
+<div class="movie-card">
+<img src="https://via.placeholder.com/90x120?text={{m.title}}" alt="{{m.title}}">
+<div>
+<b>{{m.title}}</b>
+<br><small>Telugu | Action</small><br><br>
+
+<!-- DATES - Click avtai -->
+<div>
+{% for d in dates %}
+<span class="date-pill" data-date="{{d}}" onclick="selectDate(this, '{{d}}')">{{d}}</span>
+{% endfor %}
+</div>
+<br>
+
+<!-- TIMES - Okka row ye -->
+<div>
+{% for st in show_times %}
+<a class="time-btn" href="/book?theatre={{theatre}}&movie_id={{m.id}}&date={{dates[0]}}&show={{st}}">{{st}}</a>
+{% endfor %}
+</div>
+
+</div>
+</div>
+{% endfor %}
+
+</body>
+</html>
